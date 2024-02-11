@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Chocolate Day</title>
-        <link rel="stylesheet" href="styles.css">
-        <script src="choco.js"></script>
-    </head>
-    <body>
-      <h1>Change text to speech</h1>
-      <label for="t1">Enter your text:</label>
-      <input type="text" id="t1" name="t1">
-      <br>
-      <button>Speech</button>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Synthesis</title>
+</head>
+<body>
+    <input type="text" id="text-input" placeholder="Enter text to speak">
+    <button id="speak-button">Speak</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const apiKey = '3c539ec4f5e14c06a46c07c70e305c5c';
+            const apiUrl = `http://api.voicerss.org/?key=${apiKey}&hl=en-us`;
+
+            async function speakText(text) {
+                try {
+                    const response = await fetch(`${apiUrl}&src=${encodeURIComponent(text)}`);
+
+                    if (response.ok) {
+                        const audioUrl = await response.text();
+                        const audio = new Audio(audioUrl);
+                        audio.play();
+                    } else {
+                        console.error('Error:', response.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            }
+
+            const textInput = document.querySelector('#text-input');
+            const speakButton = document.querySelector('#speak-button');
+
+            speakButton.addEventListener('click', () => {
+                console.log('Button clicked');
+                const text = textInput.value;
+                speakText(text);
+            });
+        });
+    </script>
+</body>
 </html>
